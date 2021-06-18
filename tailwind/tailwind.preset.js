@@ -5,10 +5,10 @@ module.exports = {
     extend: {
       colors: {
         primary: {
-          DEFAULT: "#321411",
+          DEFAULT: "#EE3338",
         },
         secondary: {
-          DEFAULT: "#C4AD8B",
+          DEFAULT: "#727577",
         },
         whatsapp: "#25D366",
         "true-gray": colors.trueGray,

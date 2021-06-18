@@ -1,11 +1,18 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
+  <e-header />
+  <router-view v-slot="{ Component }">
+    <transition name="component" mode="out-in">
+      <component :is="Component" />
+    </transition>
+  </router-view>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import EHeader from "./components/app/EHeader.vue";
 
 export default defineComponent({
+  components: { EHeader },
   name: "App",
 });
 </script>

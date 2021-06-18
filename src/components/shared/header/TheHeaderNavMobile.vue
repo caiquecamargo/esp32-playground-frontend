@@ -1,6 +1,10 @@
 <template>
-  <nav class="flex items-center justify-center">
-    <the-button-sandwich ref="buttonSandwich" @click.prevent="swapState" />
+  <nav class="flex items-center justify-center text-white">
+    <the-button-sandwich
+      class="text-white"
+      ref="buttonSandwich"
+      @click.prevent="swapState"
+    />
     <the-float-menu ref="navMenu" @click-outside="close">
       <slot />
     </the-float-menu>
