@@ -4,7 +4,7 @@
       <cptm-logo class="w-28 text-white" />
     </template>
     <template #navMobile>
-      <e-nav-mobile class="text-white" />
+      <e-nav-mobile />
     </template>
   </the-header>
 </template>

@@ -28,9 +28,11 @@ module.exports = {
       },
       gridTemplateRows: {
         product: "60% 40%",
+        card: "80% 20%",
       },
       height: {
         "45vw": "45vw",
+        "45vh": "45vh",
         112: "28rem",
         120: "30rem",
       },

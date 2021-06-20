@@ -17,7 +17,7 @@
     "
   >
     <slot name="logo" />
-    <the-header-nav-mobile class="text-current" v-if="mobile">
+    <the-header-nav-mobile v-if="mobile">
       <slot name="navMobile" />
     </the-header-nav-mobile>
     <the-header-nav v-else>

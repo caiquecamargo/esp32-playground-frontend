@@ -13,7 +13,7 @@ import { AnimeSandwich } from "./controllers/AnimeSandwich";
 
 export default defineComponent({
   setup() {
-    const button = ref((null as unknown) as HTMLElement);
+    const button = ref(null as unknown as HTMLElement);
     let animationController = new AnimationController<AnimeSandwich>();
 
     onMounted(() => {

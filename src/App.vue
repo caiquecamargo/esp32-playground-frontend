@@ -1,10 +1,12 @@
 <template>
-  <e-header />
-  <router-view v-slot="{ Component }">
-    <transition name="component" mode="out-in">
-      <component :is="Component" />
-    </transition>
-  </router-view>
+  <div class="w-full overflow-hidden">
+    <e-header />
+    <router-view v-slot="{ Component }">
+      <transition name="component" mode="out-in">
+        <component :is="Component" />
+      </transition>
+    </router-view>
+  </div>
 </template>
 
 <script lang="ts">
