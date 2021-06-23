@@ -20,15 +20,6 @@ export default defineComponent({
 </script>
 
 <style>
-@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;1,400;1,600&display=swap");
-
-/* @font-face {
-  font-family: "Monotype Corsiva";
-  src: local("Monotype Corsiva"), url("./fonts/MTCORSVA.woff2") format("woff2");
-  font-style: normal;
-  font-display: swap;
-} */
-
 .component-enter-from,
 .component-leave-to {
   opacity: 0;

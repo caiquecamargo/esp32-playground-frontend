@@ -16,10 +16,6 @@ module.exports = {
       transitionDuration: {
         450: "450ms",
       },
-      fontFamily: {
-        monotype: "Monotype Corsiva",
-        opensans: "Open Sans",
-      },
       gridTemplateColumns: {
         link: "30px 1fr",
         button: "2rem 1fr",
