@@ -13,8 +13,7 @@
       class="
         btn-lg-border-md
         text-primary
-        hover:text-white
-        hover:bg-primary
+        hover:text-white hover:bg-primary
         col-span-full
         font-opensans
         clamptext-08-12
@@ -37,7 +36,6 @@ import TheContainerLoader from "./TheContainerLoader.vue";
 import TheButton from "../../shared/button/TheButton.vue";
 import { getGridColumnsQty } from "../../../helpers/utils";
 import TheSearchNotFound from "../search/TheSearchNotFound.vue";
-import { IProduct } from "../../../models/IProduct";
 
 export default defineComponent({
   components: {
@@ -49,7 +47,7 @@ export default defineComponent({
   emits: ["loadMore"],
   props: {
     items: {
-      type: Array as PropType<IProduct[]>,
+      type: Array,
       default: [],
     },
     hasMore: {
