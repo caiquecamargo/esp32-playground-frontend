@@ -1,8 +1,18 @@
 <template>
-  <div class="relative h-16 w-full">
+  <div class="relative h-12 w-full">
     <input
       v-if="!lazy"
-      class="bg-none p-3 pb-1 w-full border-b-2 border-t-0 border-r-0 border-l-2 border- border-current text-current rounded focus:border-secondary focus:ring-0"
+      class="
+        bg-none
+        p-3
+        pb-1
+        w-full
+        border-b-2 border-t-0 border-r-0 border-l-2 border- border-current
+        text-current
+        rounded
+        focus:border-secondary focus:ring-0
+      "
+      :class="{ 'bg-true-gray-200': disable }"
       :disabled="disable"
       :type="type"
       :name="idInput.toString()"
@@ -11,7 +21,17 @@
     />
     <input
       v-else
-      class="bg-none p-3 pb-1 w-full border-b-2 border-t-0 border-r-0 border-l-2 border-current text-current rounded focus:border-secondary focus:ring-0"
+      class="
+        bg-none
+        p-3
+        pb-1
+        w-full
+        border-b-2 border-t-0 border-r-0 border-l-2 border-current
+        text-current
+        rounded
+        focus:border-secondary focus:ring-0
+      "
+      :class="{ 'bg-true-gray-200': disable }"
       :disabled="disable"
       :type="type"
       :name="idInput.toString()"
@@ -20,7 +40,18 @@
     />
     <label
       v-if="labelName"
-      class="absolute rounded top-1 on-focus left-3 text-current bg-none z-10 p-1 duration-450"
+      class="
+        absolute
+        rounded
+        top-1
+        on-focus
+        left-3
+        text-current
+        bg-none
+        z-10
+        p-1
+        duration-450
+      "
       :class="[required ? 'decorator-required' : '', filled ? '-top-4' : '']"
       :for="idInput.toString()"
       >{{ labelName }}</label
@@ -88,6 +119,9 @@ export default defineComponent({
       (value) => {
         if (type.value === "number") filled.value = true;
         else filled.value = value ? true : false;
+      },
+      {
+        immediate: true,
       }
     );
 

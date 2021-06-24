@@ -1,69 +1,87 @@
 <template>
-  <the-main>
-    <div class="pt-10">Ver usuários</div>
+  <the-main class="flex flex-col pt-14 lg:pt-20 pb-4 px-4">
+    <the-search @onSearch="onSearch" />
+    <div v-if="search" class="flex justify-between flex-wrap gap-2 mt-2">
+      <the-search-result :search="search" />
+      <button
+        class="rounded bg-secondary text-white text-sm py-1 px-2"
+        @click.prevent="getUsers"
+      >
+        Mostrar todos
+      </button>
+    </div>
+    <e-list-users
+      class="mt-4"
+      v-if="users.length"
+      :users="users"
+      @on-click="onClick"
+    />
+    <page-loader-animation ref="loader" v-show="!users.length" />
   </the-main>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, onMounted, ref, watch } from "vue";
 import TheMain from "../components/shared/main/TheMain.vue";
-import { Api } from "../services";
+import TheSearch from "../components/shared/search/TheSearch.vue";
+import TheSearchResult from "../components/shared/search/TheSearchResult.vue";
+import { User } from "../models/IUser";
+import { UserService } from "../services/UserService";
+import EListUsers from "../components/app/EListUsers.vue";
+import PageLoaderAnimation from "../components/shared/loaders/PageLoaderAnimation.vue";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
-  components: { TheMain },
+  components: {
+    TheMain,
+    TheSearch,
+    TheSearchResult,
+    EListUsers,
+    PageLoaderAnimation,
+  },
   setup() {
-    const endpoint = "/user";
-    const time = 1000;
+    const search = ref("");
+    const users = ref<User[]>([]);
+    const loader = ref<InstanceType<typeof PageLoaderAnimation>>();
+    const router = useRouter();
 
-    setTimeout(
-      () =>
-        Api.post({ endpoint }).then((response) =>
-          console.log("POST.", response)
-        ),
-      time
+    const onSearch = (text: string) => {
+      search.value = text;
+    };
+
+    const onClick = (user: User) => {
+      router.push({ name: "User", params: { id: user.cardId } });
+    };
+
+    const getUsers = async () => {
+      users.value = [];
+      loader.value?.animate();
+      if (search.value)
+        users.value = await UserService.findByName(search.value);
+      else users.value = await UserService.findAll();
+
+      loader.value?.stop();
+    };
+
+    onMounted(() => {
+      getUsers();
+    });
+
+    watch(
+      () => search.value,
+      () => {
+        if (search.value) getUsers();
+      }
     );
 
-    setTimeout(
-      () =>
-        Api.get({ endpoint }).then((response) =>
-          console.log("GET sem parametros.", response)
-        ),
-      time * 2
-    );
-
-    setTimeout(
-      () =>
-        Api.get({ endpoint, parameters: "name=gesomel" }).then((response) =>
-          console.log("GET com name.", response)
-        ),
-      time * 3
-    );
-
-    setTimeout(
-      () =>
-        Api.get({ endpoint, parameters: "id=1593" }).then((response) =>
-          console.log("GET com id.", response)
-        ),
-      time * 4
-    );
-
-    setTimeout(
-      () =>
-        Api.put({
-          endpoint,
-          pathParam: "1593",
-          parameters: "name=gesomel",
-        }).then((response) => console.log("PUT.", response)),
-      time * 5
-    );
-
-    setTimeout(
-      () =>
-        Api.delete({ endpoint, pathParam: "1593" }).then((response) =>
-          console.log("DELETE.", response)
-        ),
-      time * 6
-    );
+    return {
+      onSearch,
+      onClick,
+      getUsers,
+      search,
+      users,
+      loader,
+    };
   },
 });
 </script>

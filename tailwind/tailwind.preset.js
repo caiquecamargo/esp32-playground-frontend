@@ -21,6 +21,7 @@ module.exports = {
         button: "2rem 1fr",
         slider: "75px 1fr 75px",
         shop: "20% 80%",
+        list: "minmax(100px, 15vh) 1fr",
       },
       gridTemplateRows: {
         product: "60% 40%",

@@ -1,6 +1,6 @@
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
-interface ApiRequestParameters {
+export interface ApiRequestParameters {
   endpoint: string;
   pathParam?: string;
   parameters?: string;
@@ -31,7 +31,7 @@ export class Api {
     });
     clearTimeout(id);
 
-    if (!response.ok) return response.text();
+    if (!response.ok) throw Error(await response.text());
 
     return response.json();
   }

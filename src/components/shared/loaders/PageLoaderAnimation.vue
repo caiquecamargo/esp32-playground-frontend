@@ -31,8 +31,9 @@ export default defineComponent({
     let circleAnimation: PageLoaderAnime;
 
     onMounted(() => {
-      if (circle.value && text.value && text.value.firstElementChild) {
-        circleAnimation = new PageLoaderAnime(circle.value);
+      if (circle.value) circleAnimation = new PageLoaderAnime(circle.value);
+
+      if (text.value && text.value?.firstElementChild) {
         textAnimation = new TextLoaderAnime(
           TextLoaderAnime.prepareLettersToAnimate(
             text.value.firstElementChild as HTMLElement
@@ -43,14 +44,14 @@ export default defineComponent({
 
     const animate = () => {
       show.value = true;
-      textAnimation.animate();
-      circleAnimation.animate();
+      textAnimation?.animate();
+      circleAnimation?.animate();
     };
 
     const stop = () => {
       setTimeout(() => {
-        textAnimation.stop();
-        circleAnimation.stop();
+        textAnimation?.stop();
+        circleAnimation?.stop();
         show.value = false;
       }, 1500);
     };
