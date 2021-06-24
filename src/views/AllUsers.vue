@@ -5,7 +5,7 @@
       <the-search-result :search="search" />
       <button
         class="rounded bg-secondary text-white text-sm py-1 px-2"
-        @click.prevent="getUsers"
+        @click.prevent="showAll"
       >
         Mostrar todos
       </button>
@@ -63,6 +63,11 @@ export default defineComponent({
       loader.value?.stop();
     };
 
+    const showAll = () => {
+      search.value = "";
+      getUsers();
+    };
+
     onMounted(() => {
       getUsers();
     });
@@ -78,6 +83,7 @@ export default defineComponent({
       onSearch,
       onClick,
       getUsers,
+      showAll,
       search,
       users,
       loader,
