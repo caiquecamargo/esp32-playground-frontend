@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from "vue";
+import { defineComponent, reactive, ref } from "vue";
 import TheMain from "../components/shared/main/TheMain.vue";
 import TheTitle from "../components/shared/paragraph/TheTitle.vue";
 import FormField from "../components/shared/forms/FormField.vue";
@@ -27,6 +27,8 @@ import { User } from "../models/IUser";
 export default defineComponent({
   components: { TheMain, TheTitle, FormField },
   setup() {
+    const waitingForCard = ref(false);
+    const infoMessage = ref("");
     const user = reactive<User>({
       cardId: "",
       name: "",
@@ -37,28 +39,28 @@ export default defineComponent({
       let timeout;
 
       webSocket.onopen = () => {
-        console.log("Sending message: ", user.name);
+        waitingForCard.value = true;
+        infoMessage.value = "Aguardando leitura do cartão...";
         webSocket.send(user.name);
       };
 
       timeout = setTimeout(() => {
-        console.log("Close websocket");
         webSocket.close();
+        waitingForCard.value = false;
+        infoMessage.value = "Tempo de espera para leitura estourado!";
       }, 15000);
 
       webSocket.onmessage = (event) => {
-        console.log("Message received", event.data);
         if (event.data) {
-          console.log(JSON.parse(event.data));
           const message = JSON.parse(event.data);
           Object.assign(user, message.data);
 
-          console.log("Usuário criado com sucesso!", user);
+          infoMessage.value = `Usuário ${user.name} criado com sucesso!`;
         }
       };
 
-      webSocket.onerror = (event) => {
-        console.log("Error:", event);
+      webSocket.onerror = () => {
+        infoMessage.value = "Erro ao criar usuário!";
       };
 
       webSocket.onclose = (event) => {
