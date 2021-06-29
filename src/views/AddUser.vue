@@ -37,6 +37,7 @@ import PageLoaderAnimation from "../components/shared/loaders/PageLoaderAnimatio
 export default defineComponent({
   components: { TheMain, TheTitle, FormField, PageLoaderAnimation },
   setup() {
+    const WEBSOCKET_REQUEST_TIMEOUT = 35000;
     const waitingForCard = ref(false);
     const onSuccess = ref(false);
     const onError = ref(false);
@@ -48,6 +49,7 @@ export default defineComponent({
     });
 
     const onCreate = () => {
+      infoMessage.value = "Estabelecendo conexão...";
       const webSocket = new WebSocket("ws://192.168.4.1/ws");
       let timeout;
 
@@ -66,7 +68,7 @@ export default defineComponent({
         if (onError.value)
           infoMessage.value = "Tempo de espera para leitura estourado!";
         console.log({ onSuccess, onError });
-      }, 15000);
+      }, WEBSOCKET_REQUEST_TIMEOUT);
 
       webSocket.onmessage = (event) => {
         if (event.data) {
