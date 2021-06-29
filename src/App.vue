@@ -6,15 +6,17 @@
         <component :is="Component" />
       </transition>
     </router-view>
+    <e-footer />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 import EHeader from "./components/app/EHeader.vue";
+import EFooter from "./components/app/EFooter.vue";
 
 export default defineComponent({
-  components: { EHeader },
+  components: { EHeader, EFooter },
   name: "App",
 });
 </script>
@@ -34,7 +36,7 @@ export default defineComponent({
 }
 
 .component-enter-active {
-  transition: 450ms 1s;
+  transition: 450ms;
 }
 
 .component-leave-active {

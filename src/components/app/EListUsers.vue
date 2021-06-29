@@ -5,7 +5,7 @@
       <span>nome do usuário</span>
     </li>
     <li
-      class="grid grid-cols-list p-1 border-secondary border-b"
+      class="grid grid-cols-list px-1 py-2 border-secondary border-b"
       v-for="user in users"
       :key="user.cardId"
       @click="onClick(user)"

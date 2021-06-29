@@ -1,7 +1,10 @@
 <template>
   <the-main class="flex flex-col pt-14 lg:pt-20 pb-4 px-4">
-    <the-search @onSearch="onSearch" />
-    <div v-if="search" class="flex justify-between flex-wrap gap-2 mt-2">
+    <the-search-w-button @onSearch="onSearch" />
+    <div
+      v-if="search"
+      class="flex justify-between items-center flex-wrap gap-2 mt-2"
+    >
       <the-search-result :search="search" />
       <button
         class="rounded bg-secondary text-white text-sm py-1 px-2"
@@ -23,21 +26,21 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref, watch } from "vue";
 import TheMain from "../components/shared/main/TheMain.vue";
-import TheSearch from "../components/shared/search/TheSearch.vue";
 import TheSearchResult from "../components/shared/search/TheSearchResult.vue";
 import { User } from "../models/IUser";
 import { UserService } from "../services/UserService";
 import EListUsers from "../components/app/EListUsers.vue";
 import PageLoaderAnimation from "../components/shared/loaders/PageLoaderAnimation.vue";
 import { useRouter } from "vue-router";
+import TheSearchWButton from "../components/shared/search/TheSearchWButton.vue";
 
 export default defineComponent({
   components: {
     TheMain,
-    TheSearch,
     TheSearchResult,
     EListUsers,
     PageLoaderAnimation,
+    TheSearchWButton,
   },
   setup() {
     const search = ref("");
