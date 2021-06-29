@@ -48,26 +48,34 @@ export default defineComponent({
       name: "",
     });
 
+    const startLoading = () => {
+      waitingForCard.value = true;
+      loader.value?.animate();
+    };
+
+    const stopLoading = () => {
+      waitingForCard.value = false;
+      loader.value?.stop();
+    };
+
     const onCreate = () => {
       infoMessage.value = "Estabelecendo conexão...";
       const webSocket = new WebSocket("ws://192.168.4.1/ws");
-      let timeout;
 
       webSocket.onopen = () => {
-        waitingForCard.value = true;
-        loader.value?.animate();
+        startLoading();
         infoMessage.value = "Aguardando leitura do cartão...";
         webSocket.send(user.name);
       };
 
-      timeout = setTimeout(() => {
+      setTimeout(() => {
         webSocket.close();
-        waitingForCard.value = false;
-        loader.value?.stop();
-        onError.value = onSuccess.value ? false : true;
-        if (onError.value)
+        stopLoading();
+
+        if (!onSuccess.value) {
+          onError.value = true;
           infoMessage.value = "Tempo de espera para leitura estourado!";
-        console.log({ onSuccess, onError });
+        }
       }, WEBSOCKET_REQUEST_TIMEOUT);
 
       webSocket.onmessage = (event) => {
@@ -76,15 +84,15 @@ export default defineComponent({
           Object.assign(user, message.data);
 
           infoMessage.value = `Usuário ${user.name} criado com sucesso!`;
-          waitingForCard.value = false;
           onSuccess.value = true;
-          loader.value?.stop();
+          stopLoading();
         }
       };
 
       webSocket.onerror = () => {
         infoMessage.value = "Erro ao criar usuário!";
         onError.value = true;
+        stopLoading();
       };
 
       webSocket.onclose = (event) => {
