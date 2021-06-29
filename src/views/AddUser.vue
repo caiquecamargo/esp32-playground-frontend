@@ -14,6 +14,15 @@
         Criar usuário
       </button>
     </div>
+    <div
+      class="text-lg text-center italic my-10"
+      :class="{ 'text-whatsapp': onSuccess, 'text-red-800': onError }"
+    >
+      {{ infoMessage }}
+    </div>
+    <div class="relative">
+      <page-loader-animation class="h-4" ref="loader" v-show="waitingForCard" />
+    </div>
   </the-main>
 </template>
 
@@ -23,12 +32,16 @@ import TheMain from "../components/shared/main/TheMain.vue";
 import TheTitle from "../components/shared/paragraph/TheTitle.vue";
 import FormField from "../components/shared/forms/FormField.vue";
 import { User } from "../models/IUser";
+import PageLoaderAnimation from "../components/shared/loaders/PageLoaderAnimation.vue";
 
 export default defineComponent({
-  components: { TheMain, TheTitle, FormField },
+  components: { TheMain, TheTitle, FormField, PageLoaderAnimation },
   setup() {
     const waitingForCard = ref(false);
+    const onSuccess = ref(false);
+    const onError = ref(false);
     const infoMessage = ref("");
+    const loader = ref<InstanceType<typeof PageLoaderAnimation>>();
     const user = reactive<User>({
       cardId: "",
       name: "",
@@ -40,6 +53,7 @@ export default defineComponent({
 
       webSocket.onopen = () => {
         waitingForCard.value = true;
+        loader.value?.animate();
         infoMessage.value = "Aguardando leitura do cartão...";
         webSocket.send(user.name);
       };
@@ -47,7 +61,11 @@ export default defineComponent({
       timeout = setTimeout(() => {
         webSocket.close();
         waitingForCard.value = false;
-        infoMessage.value = "Tempo de espera para leitura estourado!";
+        loader.value?.stop();
+        onError.value = onSuccess.value ? false : true;
+        if (onError.value)
+          infoMessage.value = "Tempo de espera para leitura estourado!";
+        console.log({ onSuccess, onError });
       }, 15000);
 
       webSocket.onmessage = (event) => {
@@ -56,11 +74,15 @@ export default defineComponent({
           Object.assign(user, message.data);
 
           infoMessage.value = `Usuário ${user.name} criado com sucesso!`;
+          waitingForCard.value = false;
+          onSuccess.value = true;
+          loader.value?.stop();
         }
       };
 
       webSocket.onerror = () => {
         infoMessage.value = "Erro ao criar usuário!";
+        onError.value = true;
       };
 
       webSocket.onclose = (event) => {
@@ -71,6 +93,11 @@ export default defineComponent({
     return {
       user,
       onCreate,
+      onSuccess,
+      onError,
+      infoMessage,
+      waitingForCard,
+      loader,
     };
   },
 });

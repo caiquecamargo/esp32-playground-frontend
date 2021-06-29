@@ -1,7 +1,7 @@
 <template>
   <div
     class="
-      fixed
+      absolute
       inset-0
       z-0
       bg-transparent
