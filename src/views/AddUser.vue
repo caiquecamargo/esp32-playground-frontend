@@ -32,6 +32,7 @@ import TheMain from "../components/shared/main/TheMain.vue";
 import TheTitle from "../components/shared/paragraph/TheTitle.vue";
 import FormField from "../components/shared/forms/FormField.vue";
 import { User } from "../models/IUser";
+import { WebSocketData } from "../models/IWebSocketData";
 import PageLoaderAnimation from "../components/shared/loaders/PageLoaderAnimation.vue";
 
 export default defineComponent({
@@ -58,13 +59,27 @@ export default defineComponent({
       loader.value?.stop();
     };
 
+    const log = {
+      error: (message: string) => {
+        onError.value = true;
+        infoMessage.value = message;
+      },
+      success: (message: string) => {
+        onSuccess.value = true;
+        infoMessage.value = message;
+      },
+      info: (message: string) => {
+        infoMessage.value = message;
+      },
+    };
+
     const onCreate = () => {
-      infoMessage.value = "Estabelecendo conexão...";
+      log.info("Estabelecendo conexão...");
       const webSocket = new WebSocket("ws://192.168.4.1/ws");
 
       webSocket.onopen = () => {
         startLoading();
-        infoMessage.value = "Aguardando leitura do cartão...";
+        log.info("Aguardando leitura do cartão...");
         webSocket.send(user.name);
       };
 
@@ -72,26 +87,30 @@ export default defineComponent({
         webSocket.close();
         stopLoading();
 
-        if (!onSuccess.value) {
-          onError.value = true;
-          infoMessage.value = "Tempo de espera para leitura estourado!";
-        }
+        if (!onSuccess.value)
+          log.error("Tempo de espera para leitura estourado!");
       }, WEBSOCKET_REQUEST_TIMEOUT);
 
       webSocket.onmessage = (event) => {
         if (event.data) {
-          const message = JSON.parse(event.data);
-          Object.assign(user, message.data);
+          const message: WebSocketData = JSON.parse(event.data);
 
-          infoMessage.value = `Usuário ${user.name} criado com sucesso!`;
-          onSuccess.value = true;
+          if (message.error) {
+            log.error(message.error);
+          } else if (message.user) {
+            Object.assign(user, message.user);
+
+            log.success(`Usuário ${user.name} criado com sucesso!`);
+          } else {
+            log.error("Algo inesperado aconteceu");
+          }
+
           stopLoading();
         }
       };
 
       webSocket.onerror = () => {
-        infoMessage.value = "Erro ao criar usuário!";
-        onError.value = true;
+        log.error("Algo inesperado aconteceu");
         stopLoading();
       };
 
