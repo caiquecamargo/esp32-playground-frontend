@@ -97,8 +97,8 @@ export default defineComponent({
 
           if (message.error) {
             log.error(message.error);
-          } else if (message.user) {
-            Object.assign(user, message.user);
+          } else if (message.data) {
+            Object.assign(user, message.data);
 
             log.success(`Usuário ${user.name} criado com sucesso!`);
           } else {

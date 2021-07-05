@@ -1,6 +1,6 @@
 import { User } from "./IUser";
 
 export interface WebSocketData {
-  user?: User;
+  data?: User[] | User;
   error?: string;
 }
